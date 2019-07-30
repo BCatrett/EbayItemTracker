@@ -26,7 +26,7 @@ def getDate(current):
 def formatPrice(price):
 	formattedPrice=price.replace("$","").replace(",","")
 	#there are some instnaces where the price is not defined in such a way 
-	#it can be converted to a float, we catch the error and set the price to a high value
+	#it can be converted to a float, catch the error and set the price to a high, basically skipping over it
 	try:
 		formattedPrice=float(formattedPrice)
 	except:
@@ -122,6 +122,7 @@ def saveCriteriaList(list,fileName):
 		file=open(fileName,"w")
 	except:
 		return False
+	#writes the list to a file seperated by '~'. This is the seperator used for reading.
 	for items in list:
 		line=(items.query +"~"+ items.price +"~"+ items.includeList +"~"+ items.excludeList +"\n")
 		file.writelines(line)
@@ -145,10 +146,11 @@ def readFile(thisFile,list):
 		return False
 	
 	return True
-
+#runs through all the searches entered by the user
 def runSearch(list):
 	threads=[]
-	
+	#reimplemented this with threads, the improvment was underwhelming
+	#will refactor to thread the opening of the html pages and storing the data
 	for items in list:
 		process = Thread(target=searchEbay, args=[items])
 		process.start()
@@ -157,6 +159,7 @@ def runSearch(list):
 	
 	for processes in threads:
 		process.join()
+#Runs the ebay searches. 
 def searchEbay(searchList):
 	#load page into pagesoup
 	pageSoup=setPage(searchList.query)
