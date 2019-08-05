@@ -6,6 +6,7 @@ from criteriaList import*
 from GUIhed import *
 import os, time, pytz
 from threading import Thread
+import re
 
 
 utc = pytz.utc
@@ -50,13 +51,16 @@ def isAnElementOfTitle(title,objectList):
 	
 	#formats title,include keywords and exclude keywords
 	thisIncludeList=formatElementOfTitleText(objectList.includeList)
+	#formats ebay title to remove special characters that prevent include/exclude matches
+	#not included in formatElementOfTitleText because that method is used for multiple string conversions
+	title=re.sub('[*!@~?\/)(|.,<>$%^&+-]',' ',title)
+	
 	titleList=formatElementOfTitleText(title)
 	thisExcludeList=formatElementOfTitleText(objectList.excludeList)
 	
 	#checks if we have an exclude word present. If so, skip this item
 	for eItem in thisExcludeList:
 		if eItem in titleList:
-			print ("noooo")
 			return False
 			
 	#checks if our include list is empty. If it is, we look at the entire title.		
@@ -120,7 +124,8 @@ def getCriteriaObj(search,price,include,exclude):
 def saveCriteriaList(list,fileName):
 	try:
 		file=open(fileName,"w")
-	except:
+	except Exception as e:
+		print(e)
 		return False
 	#writes the list to a file seperated by '~'. This is the seperator used for reading.
 	for items in list:
@@ -134,13 +139,14 @@ def saveCriteriaList(list,fileName):
 def readFile(thisFile,list):
 	list.clear()
 	tempList={}
-	i=0
+	#i=0
 	try:
 		with open(thisFile,"r") as file:
 			for line in file:
 				tempList=line.split("~")
 				list.append(getCriteriaObj(tempList[0],tempList[1],tempList[2],tempList[3]))
-				i=i+1
+				print("tesssssssssssssssssssst")
+				#i=i+1
 		file.close()
 	except:
 		return False

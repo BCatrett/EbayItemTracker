@@ -1,17 +1,18 @@
 import sys
 from newItemTracker import *
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QLineEdit,QGridLayout,QGroupBox,QHBoxLayout,QDialog,QGroupBox,QFileDialog
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtWidgets import *
+
 
 
 app = QApplication(sys.argv)
 
 
 	
-class App(QWidget):
+class App(QScrollArea,QWidget):
 
 	def __init__(self):
 		super().__init__()
@@ -36,35 +37,35 @@ class App(QWidget):
 		#calls addCriteria to add new items to our critList list
 		addSearchBtn = QPushButton("Add",self)
 		addSearchBtn.resize(addSearchBtn.sizeHint())
-		addSearchBtn.move(50,400)
+		addSearchBtn.move(50,25)
 		addSearchBtn.clicked.connect(lambda: self.addCriteria(critList))
 		
 		#create and add out DISPLAYLIST to the main window
 		#calls displayCriteriaList which shows all elements of the critList list
 		displayBtn = QPushButton("Display All Searches",self)
 		displayBtn.resize(displayBtn.sizeHint())
-		displayBtn.move(150,400)
+		displayBtn.move(50,50)
 		displayBtn.clicked.connect(lambda: self.displayCriteriaList(critList))
 		
 		saveListBtn = QPushButton("Save File",self)
 		saveListBtn.resize(saveListBtn.sizeHint())
-		saveListBtn.move(300,400)
+		saveListBtn.move(50,75)
 		saveListBtn.clicked.connect(lambda:self.saveCritList(critList,1))
 		
 		saveNewListBtn = QPushButton("Save New File",self)
 		saveNewListBtn.resize(saveNewListBtn.sizeHint())
-		saveNewListBtn.move(450,400)
+		saveNewListBtn.move(50,100)
 		saveNewListBtn.clicked.connect(lambda:self.saveCritList(critList,0))
 		
-		saveNewListBtn = QPushButton("Load File",self)
-		saveNewListBtn.resize(saveNewListBtn.sizeHint())
-		saveNewListBtn.move(550,400)
-		saveNewListBtn.clicked.connect(lambda:self.loadFile(critList))
+		loadFileBtn = QPushButton("Load File",self)
+		loadFileBtn.resize(loadFileBtn.sizeHint())
+		loadFileBtn.move(50,125)
+		loadFileBtn.clicked.connect(lambda:self.loadFile(critList))
 		
-		saveNewListBtn = QPushButton("Run",self)
-		saveNewListBtn.resize(saveNewListBtn.sizeHint())
-		saveNewListBtn.move(350,300)
-		saveNewListBtn.clicked.connect(lambda:self.executeSearch(critList))
+		runBtn = QPushButton("Run",self)
+		runBtn.resize(saveNewListBtn.sizeHint())
+		runBtn.move(50,150)
+		runBtn.clicked.connect(lambda:self.executeSearch(critList))
 		
 		self.show()
 		
@@ -136,6 +137,9 @@ class App(QWidget):
 		self.DCL.move(300, 300)
 		self.DCL.setWindowTitle('Display All')
 		
+		
+		
+		
 		self.DCL.horizontalGroupBox = QGroupBox("All Search Criteria")
 		self.DCL.layout = QGridLayout()
 		#self.w.layout.setColumnStretch(1, 4)
@@ -145,6 +149,8 @@ class App(QWidget):
 		self.DCL.layout.addWidget(QLabel("Price"),0,1)
 		self.DCL.layout.addWidget(QLabel("Mandatory Words"),0,2)
 		self.DCL.layout.addWidget(QLabel("Excluded Words"),0,3)
+		
+		
 		
 		#Loop that places all elements of our criteriaList(passed as list)
 		#Also places Edit buttons -> calls editCriteriaList
@@ -181,6 +187,7 @@ class App(QWidget):
 		self.DCL.horizontalGroupBox.setLayout(self.DCL.layout)
 		
 		windowLayout = QVBoxLayout()
+	
 		windowLayout.addWidget(self.DCL.horizontalGroupBox)
 		self.DCL.setLayout(windowLayout)
 		self.DCL.show()
@@ -266,6 +273,7 @@ class App(QWidget):
 			fileName=QFileDialog.getSaveFileName()
 		
 		#call saveCriteriaList: displays a message if it is successful or not
+		
 		if(saveCriteriaList(list,fileName[0])):
 			self.displayMessage("Save Successful!")
 		else:
@@ -273,8 +281,11 @@ class App(QWidget):
 	
 	def loadFile(self,list):
 		fileName=QFileDialog.getOpenFileName()
+		print(fileName)
 		#call readFile: displays a message if it is successful or not
-		if(readFile(fileName[0],list)):
+		test=readFile(fileName[0],list)
+		print(test)
+		if(test):
 			self.displayMessage("Load Successful!")
 		else:
 			self.displayMessage("Load Failed")
