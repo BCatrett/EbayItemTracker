@@ -50,15 +50,15 @@ def formatElementOfTitleText(listIn):
 def isAnElementOfTitle(title,objectList):
 	
 	#formats title,include keywords and exclude keywords
-	thisIncludeList=formatElementOfTitleText(objectList.includeList)
+	thisIncludeList=formatElementOfTitleText(objectList.getIncludeList())
 	#formats ebay title to remove special characters that prevent include/exclude matches
 	#not included in formatElementOfTitleText because that method is used for multiple string conversions
 	title=re.sub('[*!@~?\/)(|.,<>$%^&+-]',' ',title)
 	
 	titleList=formatElementOfTitleText(title)
-	thisExcludeList=formatElementOfTitleText(objectList.excludeList)
+	thisExcludeList=formatElementOfTitleText(objectList.getExcludeList())
 	
-	#checks if we have an exclude word present. If so, skip this item
+	#checks if there is an exclude word present. If so, skip this item
 	for eItem in thisExcludeList:
 		if eItem in titleList:
 			return False
@@ -74,6 +74,19 @@ def isAnElementOfTitle(title,objectList):
 			
 	return False
 
+
+def setPageThreads(searchList):
+	pageList=[]
+	for items in searchList:
+		pagesoupdProcess = Thread(target=setPage, args=[items])
+		pagesoupdProcess.start()
+		pageList.append(pagesoupdProcess)
+		#time.sleep(5)
+	
+	for processes in pageList:
+		pagesoupdProcess.join()
+	
+	return pageList
 #reads the html file so it can be parsed
 def setPage(searchList):
 	
@@ -168,7 +181,8 @@ def runSearch(list):
 #Runs the ebay searches. 
 def searchEbay(searchList):
 	#load page into pagesoup
-	pageSoup=setPage(searchList.query)
+	
+	pageSoup=setPage(searchList.getQuery())
 	
 	#establish container that stores price and date
 	container=(pageSoup.findAll("div", {"class": "s-item__info clearfix"}))
@@ -188,7 +202,6 @@ def searchEbay(searchList):
 		price=(priceCont[0].text)
 		price=formatPrice(price)
 		
-		
 		#grabs the date container in our CURRENT container, sets it to text and splits it
 		dateCont=getDate(current)
 		
@@ -202,11 +215,10 @@ def searchEbay(searchList):
 		
 		#datetimeTEST=now.strptime('2019'+' '+day,'%Y %b-%d %H:%M')
 		timeIsMet=timeCriteriaIsMet(day,4320)
-		priceIsMet=priceCriteriaIsMet(price,searchList.price)
+		priceIsMet=priceCriteriaIsMet(price,searchList.getPrice())
 		
 		#check if any our criteria is met
-		# if timeIsMet is not true the no other auctions on this page are true so we break
-		
+		# if timeIsMet is not true then no other auctions on this page are true so we break
 		if timeIsMet is True:
 			if priceIsMet is True and isAnElementOfTitle(title3,searchList) is True:
 				print(title3 + " " + str(price) + " " + day)

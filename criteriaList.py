@@ -14,6 +14,18 @@ class criteria(object):
 		print(self.includeList)
 		print(self.excludeList)
 		
+	def getQuery(self):
+		return self.query
+	
+	def getPrice(self):
+		return self.price
+	
+	def getIncludeList(self):
+		return self.includeList
+	
+	def getExcludeList(self):
+		return self.excludeList
+		
 def getCriteriaObject():
 	
 	query = input("Enter your search:")
