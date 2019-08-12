@@ -65,7 +65,8 @@ class App(QScrollArea,QWidget):
 		runBtn = QPushButton("Run",self)
 		runBtn.resize(saveNewListBtn.sizeHint())
 		runBtn.move(50,150)
-		runBtn.clicked.connect(lambda:self.executeSearch(critList))
+		runBtn.clicked.connect(lambda:self.executeSearchDialogBox(critList))
+		
 		
 		self.show()
 		
@@ -290,7 +291,7 @@ class App(QScrollArea,QWidget):
 		else:
 			self.displayMessage("Load Failed")
 		
-	def executeSearch(self,list):
+	def executeSearchDialogBox(self,list):
 		self.running = QDialog()
 		self.running.resize(400, 200)
 		self.running.move(300, 300)
@@ -300,15 +301,31 @@ class App(QScrollArea,QWidget):
 		self.running.layout = QGridLayout()
 		
 		
-		self.running.layout.addWidget(QLabel("Running"))
+		self.running.layout.addWidget(QLabel(""))
 		
 		self.running.horizontalGroupBox.setLayout(self.running.layout)
 		windowLayout = QVBoxLayout()
 		windowLayout.addWidget(self.running.horizontalGroupBox)
 		self.running.setLayout(windowLayout)
 		
+		executeBtn = QPushButton("Execute",self.running)
+		self.running.layout.addWidget(executeBtn)
+		executeBtn.resize(executeBtn.sizeHint())
+		
+		terminateBtn = QPushButton("Terminate",self.running)
+		self.running.layout.addWidget(terminateBtn)
+		executeBtn.resize(terminateBtn.sizeHint())
+		#executeBtn.move(50,150)
+		executeBtn.clicked.connect(lambda:self.executeSearch(list))
+		
 		self.running.show()	
-		runSearch(list)
+
+		
+	def executeSearch(self,searchList):
+		
+		runSearch(searchList)
+		
+		
 	#dialogue box to show a message.
 	def displayMessage(self,messageToDisplay):
 		self.dMessage = QDialog()

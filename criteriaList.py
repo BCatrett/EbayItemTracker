@@ -1,4 +1,4 @@
-
+from bs4 import BeautifulSoup as soup
 
 class criteria(object):
 	
@@ -7,6 +7,7 @@ class criteria(object):
 		self.price=pricePoint
 		self.includeList=iList
 		self.excludeList=eList
+		
 	
 	def displayCriteria(self):
 		print(self.query)
@@ -25,6 +26,8 @@ class criteria(object):
 	
 	def getExcludeList(self):
 		return self.excludeList
+	
+	
 		
 def getCriteriaObject():
 	

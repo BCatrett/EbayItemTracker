@@ -75,18 +75,6 @@ def isAnElementOfTitle(title,objectList):
 	return False
 
 
-def setPageThreads(searchList):
-	pageList=[]
-	for items in searchList:
-		pagesoupdProcess = Thread(target=setPage, args=[items])
-		pagesoupdProcess.start()
-		pageList.append(pagesoupdProcess)
-		#time.sleep(5)
-	
-	for processes in pageList:
-		pagesoupdProcess.join()
-	
-	return pageList
 #reads the html file so it can be parsed
 def setPage(searchList):
 	
@@ -109,7 +97,7 @@ def timeCriteriaIsMet(auctionListTime,executionInterval):
 	currentTime=now.strftime("%Y %b-%d %H:%M")
 	curTimeObj=now.strptime(currentTime,"%Y %b-%d %H:%M")
 	
-	#converts out time interval that is entered by user and sets it to a 
+	#converts the time interval that is entered by user and sets it to a 
 	#timedelta to compare against our time difference
 	exeIntervalObj=datetime.timedelta(0,(executionInterval*60))
 	
@@ -167,6 +155,7 @@ def readFile(thisFile,list):
 	return True
 #runs through all the searches entered by the user
 def runSearch(list):
+	
 	threads=[]
 	#reimplemented this with threads, the improvment was underwhelming
 	#will refactor to thread the opening of the html pages and storing the data
