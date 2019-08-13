@@ -1,7 +1,6 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 import datetime
-from datetime import timezone
 from criteriaList import*
 from GUIhed import *
 import os, time, pytz
@@ -222,6 +221,9 @@ def main():
 	
 	
 	criteriaList=[]
+	
+	
+
 	App()
 	
 
