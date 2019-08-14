@@ -3,13 +3,23 @@ from newItemTracker import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from PyQt5 import QtCore
+
 
 
 
 app = QApplication(sys.argv)
 
-
-	
+global critList
+critList=[]
+class QThread1(QtCore.QThread):
+		def __init__(self,parent=None):
+			QtCore.QThread.__init__(self,parent)
+		def run(self):
+			self.running=True
+			while self.running:
+				runSearchThread(critList)
+				time.sleep(1)		
 class App(QScrollArea,QWidget):
 
 	def __init__(self):
@@ -29,7 +39,7 @@ class App(QScrollArea,QWidget):
 		self.move(300,300)
 		
 		#define a list for our criteriaList objects
-		critList=[]
+		#critList=[]
 		
 		#create and add our ADDBUTTON to the main window. 
 		#calls addCriteria to add new items to our critList list
@@ -314,16 +324,21 @@ class App(QScrollArea,QWidget):
 		self.running.layout.addWidget(terminateBtn)
 		executeBtn.resize(terminateBtn.sizeHint())
 		#executeBtn.move(50,150)
-		executeBtn.clicked.connect(lambda:self.executeSearch(list))
+		executeBtn.clicked.connect(lambda:self.executeSearchBtn(list))
 		
 		self.running.show()	
 
 		
 	def executeSearch(self,searchList):
 		
-		runSearch(searchList)
+		runSearchThread(searchList)
+	
+	def executeSearchBtn(self,list):
+		self.thread1=QThread1()
 		
-		
+		self.thread1.start()
+		#executeBtn.setEnabled(False)
+					
 	#dialogue box to show a message.
 	def displayMessage(self,messageToDisplay):
 		self.dMessage = QDialog()
@@ -343,3 +358,6 @@ class App(QScrollArea,QWidget):
 		self.dMessage.setLayout(windowLayout)
 		
 		self.dMessage.show()
+
+	
+	

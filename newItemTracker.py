@@ -152,6 +152,10 @@ def readFile(thisFile,list):
 		return False
 	
 	return True
+def runSearchThread(list):
+	searchProcessThread = Thread(target=runSearch, args=[list])
+	searchProcessThread.start()
+	searchProcessThread.join()
 #runs through all the searches entered by the user
 def runSearch(list):
 	
@@ -225,6 +229,7 @@ def main():
 	
 
 	App()
+	
 	
 
 		
