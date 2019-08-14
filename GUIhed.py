@@ -10,6 +10,8 @@ from PyQt5 import QtCore
 
 app = QApplication(sys.argv)
 
+#moved this to a global variable
+#This makes some of the passing of list not necessary
 global critList
 critList=[]
 class QThread1(QtCore.QThread):
